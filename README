@@ -1,0 +1,22 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4327
+
+reStructuredText tables with improvement of cjk character alignment.
+Tables will keep same indent as the first line.
+It uses current buffer encoding, and should support any encoding like utf-8 and gbk ...
+Usage: (normal mode)
+\\c : create table, or fit column to text.
+\\f : format table, fit text to column.
+
+This (rst tables) plugin is based on vimscript #3450
+It's edited to improve cjk character alignment, also vim_bridge is not needed any more.
+Unfortunately, the author abandoned that plugin, so I uploaded this.
+The modification was inspired by vimscript #4272.The original script is vimscript #3041.
+
+reStructuredText 表格，支持中文字符对齐，表格按第一行统一缩进。
+使用当前文件编码，理论上支持gbk，utf-8等多种字符编码。
+用法：(普通模式)
+\\c : 创建表格，或是调整列宽适应文本。
+\\f : 重新布局，调整文本换行适应列宽。
+
+本插件基于 vimscript #3450 修改，优化中文对齐，移除vim_bridge依赖。因为原作者已经停止维护，所以在此重新上传。
+中文字符宽度计算和去掉vim_bridge的依赖的实现，主要参考 vimscript #4272。最原始的插件是 vimscript #3041。
