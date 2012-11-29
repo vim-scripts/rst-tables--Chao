@@ -2,7 +2,7 @@
 " reStructuredText tables plugin
 " Language:     Python (ft=python)
 " Author:       Li Chao <1983.chao@gmail.com>
-" Version:      0.3
+" Version:      0.3.1
 " Vim Version:  Vim 7.3 (may work with lower Vim versions, but not tested)
 " VimScript Id: 4327
 "
@@ -261,6 +261,9 @@ def draw_table(table, manual_widths=None):
         col_widths = get_column_widths(table)
     else:
         col_widths = manual_widths
+        new_widths = get_column_widths(table)
+        if len(new_widths) > len(col_widths):
+            col_widths += new_widths[len(col_widths):]
 
     # Reserve room for the spaces
     sep_col_widths = map(lambda x: x + 2, col_widths)
