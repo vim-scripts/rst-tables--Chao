@@ -2,7 +2,7 @@
 " reStructuredText tables plugin
 " Language:     Python (ft=python)
 " Author:       Li Chao <1983.chao@gmail.com>
-" Version:      0.3.2
+" Version:      0.3.3
 " Vim Version:  Vim 7.3 (may work with lower Vim versions, but not tested)
 " VimScript Id: 4327
 "
@@ -27,23 +27,25 @@ def buffer_encoding():
 	return vim.eval('&enc')
 
 def get_table_bounds():
+	"""return zero indexed line numbers."""
 	row, col = vim.current.window.cursor
-	upper = lower = row
+	upper = row - 1
 	try:
-		while vim.current.buffer[upper - 1].strip():
+		while vim.current.buffer[upper].strip():
 			upper -= 1
 	except IndexError:
-		pass
-	else:
+		upper += 1
+	else: #empty line
 		upper += 1
 
+	lower = row - 1
 	try:
-		while vim.current.buffer[lower - 1].strip():
+		while vim.current.buffer[lower].strip():
 			lower += 1
 	except IndexError:
 		pass
-	else:
-		lower -= 1
+	else: #empty line
+		pass
 
 	return (upper, lower)
 
@@ -303,26 +305,33 @@ def ApplyIndent(table, indent):
 
 def ReformatTable():
 	upper, lower = get_table_bounds()
-	slice = vim.current.buffer[upper - 1:lower]
+	if upper >= lower:
+		return
+	slice = vim.current.buffer[upper:lower]
 	indent = GetIndent(slice[0])
 	table = parse_table(slice)
 	slice = draw_table(table)
-	vim.current.buffer[upper - 1:lower] = ApplyIndent(slice, indent)
+	vim.current.buffer[upper:lower] = ApplyIndent(slice, indent)
 
 
 def ReflowTable():
 	upper, lower = get_table_bounds()
-	slice = vim.current.buffer[upper - 1:lower]
+	if upper >= lower:
+		return
+	slice = vim.current.buffer[upper:lower]
 	indent = GetIndent(slice[0])
 	table = parse_table(slice)
-	widths = get_column_widths_from_border_spec(slice)
+	try:
+		widths = get_column_widths_from_border_spec(slice)
+	except:
+		return
 	table = parse_table(slice)
 	slice = draw_table(table, widths)
-	vim.current.buffer[upper - 1:lower] = ApplyIndent(slice, indent)
- 
+	vim.current.buffer[upper:lower] = ApplyIndent(slice, indent)
 
 
 endpython
+
 
 " Add mappings, unless the user didn't want this.
 " The default mapping is registered, unless the user remapped it already.
